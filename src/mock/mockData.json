@@ -4,63 +4,63 @@
       "uid": "0",
       "type": "general",
       "subtype": "non-survey",
-      "topic": "industry",
+      "category": "industry",
       "content": "Tell me about one of the major industries or companies in your nation. How has this industry or company achieved such a high level of success?"
     },
     {
       "uid": "1",
       "type": "general",
       "subtype": "non-survey",
-      "topic": "industry",
+      "category": "industry",
       "content": "What kinds of companies or industries do young people want to work in? What makes that company so attractive to job seekers? Give me some specific examples of the industry or company."
     },
     {
       "uid": "2",
       "type": "general",
       "subtype": "survey",
-      "topic": "beach",
+      "category": "beach",
       "content": "You indicated in your survey that you like going to beaches. Tell me about your favorite beach. Where is it and what does it look like? Why do you like it there so much?"
     },
     {
       "uid": "3",
       "type": "general",
       "subtype": "survey",
-      "topic": "beach",
+      "category": "beach",
       "content": "Have you been to the beach recently? Please tell me about your beach trip in detail. Why did you go to the beach and what did you do? What did you eat and who did you go with?"
     },
     {
       "uid": "4",
       "type": "general",
       "subtype": "non-survey",
-      "topic": "geography",
+      "category": "geography",
       "content": "I would like to know about the geographic features of your country. What makes them different from other countries? Please describe them in as much detail as possible."
     },
     {
       "uid": "5",
       "type": "general",
       "subtype": "non-survey",
-      "topic": "travel/outdoor",
+      "category": "travel/outdoor",
       "content": "Describe the most memorable experience you have had outdoors in your childhood. What is a beautiful place you have been to? Please provide as many details as possible."
     },
     {
       "uid": "6",
       "type": "general",
       "subtype": "non-survey",
-      "topic": "travel/outdoor",
+      "category": "travel/outdoor",
       "content": "Which country do people in your country like to go to? Why is that? Please tell me in detail."
     },
     {
       "uid": "7",
       "type": "general",
       "subtype": "non-survey",
-      "topic": "travel/outdoor",
+      "category": "travel/outdoor",
       "content": "Tell me about where tourists go and what they do on their overseas trips."
     },
     {
       "uid": "8",
       "type": "roleplay",
       "subtype": "non-survey",
-      "topic": "hotel",
+      "category": "hotel",
       "content": "I'd like to give you a situation to act out. You would like to stay at a hotel for your trip, but you didn't make a reservation. Go to the reception desk and ask three or four questions to find out whether you can stay there."
     }
   ]
