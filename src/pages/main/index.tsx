@@ -38,6 +38,10 @@ export default function Main() {
           {latestData.assigned} 개 중 {latestData.done} 개를 완료했어요!
         </h5>
       )}
+      <div className="w-full h-32 p-8 grid grid-cols-2 gap-2">
+        <button className="w-full h-full bg-white border-solid border-[1px] border-slate-800">숙제 보기</button>
+        <button className="w-full h-full bg-white border-solid border-[1px] border-slate-800">첨삭 보기</button>
+      </div>
     </div>
   );
 }
