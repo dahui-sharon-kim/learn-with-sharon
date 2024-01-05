@@ -10,6 +10,7 @@ export default {
     },
     extend: {},
   },
+  darkMode: "class",
   plugins: [
     plugin(function ({ addUtilities }) {
       const newUtilities = {
