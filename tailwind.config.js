@@ -1,9 +1,13 @@
 /** @type {import('tailwindcss').Config} */
 import plugin from "tailwindcss/plugin";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 export default {
   content: ["./src/**/*.{ts,tsx}"],
   theme: {
+    fontFamily: {
+      sans: ["PretendardVariable", ...defaultTheme.fontFamily.sans],
+    },
     extend: {},
   },
   plugins: [
