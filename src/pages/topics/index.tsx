@@ -27,7 +27,6 @@ export default function Topics() {
   };
 
   const getHomeworkKeyArr = async (name: string, date: string) => {
-    console.log("get");
     let arr: string[] = [];
     const querySnapshot = await getDocs(homeworkCollection);
     querySnapshot.forEach((doc) => {
