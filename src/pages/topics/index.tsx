@@ -52,15 +52,26 @@ export default function Topics() {
         <div className="w-full flex gap-4 flex-wrap">
           <label className="flex gap-2">
             <p className="text-sm">수업일자</p>
-            <input className="text-sm" placeholder="YYYYMMDD" name="date" type="text" required />
+            <input
+              className="bg-transparent text-sm border-b-[1px] border-solid border-b-slate-400"
+              placeholder="YYYYMMDD"
+              name="date"
+              type="text"
+              required
+            />
           </label>
           <label className="flex gap-2">
             <p className="text-sm">스터디 그룹명</p>
-            <input className="text-sm" name="groupName" type="text" required />
+            <input
+              className="bg-transparent text-sm border-b-[1px] border-solid border-b-slate-400"
+              name="groupName"
+              type="text"
+              required
+            />
           </label>
         </div>
         <div className="flex items-center justify-end">
-          <button type="submit">
+          <button type="submit" className="hover:[&_p]:font-medium">
             <p className="text-sm">검색</p>
           </button>
         </div>
