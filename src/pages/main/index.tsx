@@ -1,7 +1,5 @@
+import { useNavigate } from "react-router-dom";
 import userData from "../../mock/mockUserData.json";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../firebase";
-import { useEffect } from "react";
 
 interface HomeworkData {
   done: number;
@@ -18,15 +16,7 @@ export default function Main() {
   const user: UserData = userData as UserData;
   const latestHomeworkDate = Math.max(...Object.keys(user.homework).map(Number));
   const latestData = user.homework[latestHomeworkDate.toString()];
-
-  const getTopics = async () => {
-    const snapshot = await getDocs(collection(db, "topics"));
-    return snapshot;
-  };
-
-  useEffect(() => {
-    console.log(getTopics());
-  }, []);
+  const navigate = useNavigate();
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center">
@@ -38,9 +28,19 @@ export default function Main() {
           {latestData.assigned} 개 중 {latestData.done} 개를 완료했어요!
         </h5>
       )}
-      <div className="w-full h-32 p-8 grid grid-cols-2 gap-2">
-        <button className="w-full h-full bg-white border-solid border-[1px] border-slate-800">숙제 보기</button>
-        <button className="w-full h-full bg-white border-solid border-[1px] border-slate-800">첨삭 보기</button>
+      <div className="w-full p-8 max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-2">
+        <button
+          className="w-full h-8 bg-white dark:bg-slate-600 border-solid border-[1px] border-slate-800 dark:border-slate-300"
+          onClick={() => navigate("/topics")}
+        >
+          <p>전체 토픽 보기</p>
+        </button>
+        <button
+          className="w-full h-8 bg-white dark:bg-slate-600 border-solid border-[1px] border-slate-800 dark:border-slate-300"
+          onClick={() => navigate("/homework")}
+        >
+          <p>위클리 숙제 보기</p>
+        </button>
       </div>
     </div>
   );
