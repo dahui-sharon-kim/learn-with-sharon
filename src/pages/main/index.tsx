@@ -19,7 +19,7 @@ export default function Main() {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center">
+    <div className="w-full h-full max-w-5xl flex flex-col items-center justify-center">
       <h1>안녕하세요, {userData.name} 님!</h1>
       {latestData.done === latestData.assigned ? (
         <h5>이번 주 숙제를 완전히 끝냈네요!</h5>

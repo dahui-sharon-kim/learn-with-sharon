@@ -46,7 +46,7 @@ export default function Topics() {
   };
 
   return (
-    <div className="w-full h-full p-8 max-w-5xl flex flex-col items-center justify-start gap-4">
+    <div className="w-full h-full max-w-5xl p-8 flex flex-col items-center justify-center gap-4">
       <form onSubmit={onSubmit} className="w-full flex flex-col gap-2 border-[1px] border-solid border-slate-400 p-2">
         <h3 className="font-medium">위클리 검색</h3>
         <div className="w-full flex gap-4 flex-wrap">
