@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { isEmpty } from "lodash";
 import { collection, getDocs, query, where, documentId } from "firebase/firestore";
 import { db } from "../../firebase";
 
@@ -17,9 +16,6 @@ export default function Topics() {
   const homeworkCollection = query(homeworkRef);
 
   const getHomeworkDataFromKey = async (keyArr: string[]): Promise<Topic[]> => {
-    if (isEmpty(keyArr)) {
-      return [];
-    }
     const topicsRef = collection(db, "topics");
     const topicsQuery = query(topicsRef, where(documentId(), "in", keyArr));
     const topicsQuerySnapshot = await getDocs(topicsQuery);
