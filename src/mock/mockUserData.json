@@ -1,5 +1,5 @@
 {
-  "name": "Sharon",
+  "name": "Visitor",
   "useremail": "dahui.s.kim@gmail.com",
   "homework": {
     "20231205": {
@@ -16,7 +16,7 @@
     },
     "20240102": {
       "done": 9,
-      "assigned": 10
+      "assigned": 9
     }
   }
 }
