@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const WIDTH = 14;
-const HEIGHT = 7;
+const WIDTH = 10;
+const HEIGHT = 5;
 const PADDING = 1;
-const CIRCLE_HEIGHT = 7 - 2 * PADDING;
+const CIRCLE_HEIGHT = HEIGHT - 2 * PADDING;
 const LEFT_DARK_TEXT = `left-[calc(100%-${(CIRCLE_HEIGHT + PADDING) / 4}rem)]`;
 const LEFT_LIGHT_TEXT = `left-${PADDING}`;
 
@@ -28,7 +28,7 @@ export default function Navbar() {
       </button>
       <div
         style={{ width: `${WIDTH / 4}rem`, height: `${HEIGHT / 4}rem` }}
-        className="rounded-full bg-yellow-400 dark:bg-blue-800 relative hover:cursor-pointer"
+        className="rounded-full bg-yellow-400 dark:bg-blue-500 dark:bg-opacity-50 relative hover:cursor-pointer"
         onClick={() => setDarkMode(!darkMode)}
       >
         <div
