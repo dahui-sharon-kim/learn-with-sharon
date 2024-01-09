@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const WIDTH = 14;
 const HEIGHT = 7;
@@ -7,7 +8,8 @@ const CIRCLE_HEIGHT = 7 - 2 * PADDING;
 const LEFT_DARK_TEXT = `left-[calc(100%-${(CIRCLE_HEIGHT + PADDING) / 4}rem)]`;
 const LEFT_LIGHT_TEXT = `left-${PADDING}`;
 
-export default function Sidebar() {
+export default function Navbar() {
+  const navigate = useNavigate();
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem("darkMode") === "true");
 
   useEffect(() => {
@@ -20,8 +22,10 @@ export default function Sidebar() {
   });
 
   return (
-    <nav className="w-full flex items-center justify-between h-14 sticky px-7 py-0 top-0 bg-slate-50 dark:bg-slate-800 bg-opacity-50 shadow">
-      <h1>Study with Sharon</h1>
+    <nav className="w-full flex items-center justify-between h-14 sticky px-7 py-0 top-0 bg-slate-50 dark:bg-slate-800 dark:shadow-slate-500 bg-opacity-50 shadow">
+      <button onClick={() => navigate("/main")}>
+        <h1 className="font-semibold">Study with Sharon</h1>
+      </button>
       <div
         style={{ width: `${WIDTH / 4}rem`, height: `${HEIGHT / 4}rem` }}
         className="rounded-full bg-yellow-400 dark:bg-blue-800 relative hover:cursor-pointer"
