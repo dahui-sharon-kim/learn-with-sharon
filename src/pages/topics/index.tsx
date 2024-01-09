@@ -27,6 +27,7 @@ export default function Topics() {
   };
 
   const getHomeworkKeyArr = async (name: string, date: string) => {
+    console.log("get");
     let arr: string[] = [];
     const querySnapshot = await getDocs(homeworkCollection);
     querySnapshot.forEach((doc) => {
@@ -71,22 +72,20 @@ export default function Topics() {
       </form>
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto">
         {homeworkData.map(({ uid, category, type, subtype, content }, idx) => (
-          <div
-            key={uid}
-            className="w-full [&_p]:text-sm p-3 bg-white dark:bg-slate-700 mini-scroll scroll flex flex-col gap-y-1"
-          >
-            <p>
-              {idx + 1} <span>{category}</span>
+          <div key={uid} className="w-full p-3 bg-white dark:bg-slate-700 mini-scroll scroll flex flex-col gap-y-1">
+            <p className="font-medium">
+              {idx + 1}. <span>{category}</span>
             </p>
-            <div className="w-full flex gap-x-2 gap-y-1 flex-wrap [&_p]:whitespace-nowrap [&_p]:overflow-ellipsis">
-              <div className="w-fit bg-indigo-50 dark:bg-slate-800">
+            <div className="w-full flex gap-x-2 gap-y-1 flex-wrap">
+              <div className="w-fit text-sm px-1 rounded-sm whitespace-nowrap overflow-ellipsis bg-indigo-100 dark:bg-indigo-500 dark:bg-opacity-40">
                 <p>{type}</p>
               </div>
-              <div className="w-fit bg-indigo-50 dark:bg-slate-800">
+              <div className="w-fit text-sm px-1 rounded-sm whitespace-nowrap overflow-ellipsis bg-violet-100 dark:bg-violet-500 dark:bg-opacity-40">
                 <p>{subtype}</p>
               </div>
             </div>
-            <p>{content}</p>
+            <div className="w-full my-2 h-px bg-slate-400" />
+            <p className="text-sm">{content}</p>
           </div>
         ))}
       </div>
