@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import _ from "lodash";
 import { collection, getDocs, query, where, documentId } from "firebase/firestore";
 import { db } from "../../firebase";
+import { useQuery } from "@tanstack/react-query";
 
 interface Topic {
   uid: string;
@@ -11,75 +13,107 @@ interface Topic {
 }
 
 export default function Topics() {
-  const [homeworkData, setHomeworkData] = useState<Topic[]>([]);
+  const [groupName, setGroupName] = useState("");
+  const [keyArr, setKeyArr] = useState([]);
+  const [sessionDate, setSessionDate] = useState("");
   const homeworkRef = collection(db, "homework");
   const homeworkCollection = query(homeworkRef);
 
-  const getHomeworkDataFromKey = async (keyArr: string[]): Promise<Topic[]> => {
-    const topicsRef = collection(db, "topics");
-    const topicsQuery = query(topicsRef, where(documentId(), "in", keyArr));
-    const topicsQuerySnapshot = await getDocs(topicsQuery);
-    return topicsQuerySnapshot.docs.map((doc) => doc.data()) as Topic[];
-  };
-
-  const getHomeworkKeyArr = async (name: string, date: string) => {
-    let arr: string[] = [];
-    const querySnapshot = await getDocs(homeworkCollection);
-    querySnapshot.forEach((doc) => {
-      if (doc.id === name) {
-        arr = Object.entries(doc.data())
-          .filter(([dataKey]) => dataKey === date)
-          .map(([, dataValue]) => dataValue)[0];
+  const { data: homeworkData, isFetching: isHomeworkFetching } = useQuery({
+    queryKey: ["homework", sessionDate],
+    queryFn: async (): Promise<Topic[]> => {
+      if (_.isEmpty(keyArr)) {
+        return [];
       }
-    });
-    return arr;
-  };
+      const topicsRef = collection(db, "topics");
+      const topicsQuery = query(topicsRef, where(documentId(), "in", keyArr));
+      const topicsQuerySnapshot = await getDocs(topicsQuery);
+      return topicsQuerySnapshot.docs.map((doc) => doc.data()) as Topic[];
+    },
+    staleTime: 1000 * 60 * 10, // 10분
+  });
+
+  const { data: dateKeyData } = useQuery({
+    queryKey: ["group", groupName],
+    queryFn: async (): Promise<object> => {
+      if (groupName === "") {
+        return {};
+      }
+      const querySnapshot = await getDocs(homeworkCollection);
+      let homework = {};
+      querySnapshot.forEach((doc) => {
+        if (doc.id === groupName) {
+          homework = doc.data();
+        }
+      });
+      return homework;
+    },
+    staleTime: 1000 * 60, // 1분
+  });
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const formObject = Object.fromEntries(formData.entries());
-    const groupName = formObject.groupName as string;
-    const date = formObject.date as string;
-    const dateFormatted = date.replaceAll("-", "");
-    const keyArr = await getHomeworkKeyArr(groupName, dateFormatted);
-    setHomeworkData(await getHomeworkDataFromKey(keyArr));
+    setGroupName(formObject.groupName as string);
   };
-
+  const isTopicsObjEmpty = _.isEmpty(dateKeyData);
   return (
-    <div className="w-full h-full max-w-5xl p-8 flex flex-col items-center justify-center gap-4">
-      <form onSubmit={onSubmit} className="w-full flex flex-col gap-2 border-[1px] border-solid border-slate-400 p-2">
-        <h3 className="font-medium text-lg">위클리 검색</h3>
-        <div className="w-full flex gap-4 flex-wrap">
-          <label className="flex gap-2">
-            <p>수업일자</p>
-            <input
-              className="bg-transparent border-b-[1px] border-solid border-b-slate-400"
-              placeholder="YYYYMMDD"
-              name="date"
-              type="date"
-              required
-            />
-          </label>
-          <label className="flex gap-2">
-            <p>스터디 그룹명</p>
+    <div className="w-full h-full max-w-5xl p-4 md:p-8 flex flex-col items-center justify-start gap-4">
+      <div className="w-full flex flex-col gap-3 rounded-md bg-white dark:bg-slate-700 p-3">
+        <h3 className="font-bold text-lg px-1">주간 토픽 검색</h3>
+        <div className="w-full h-px bg-slate-400" />
+        <div className="w-full flex flex-col gap-2 px-2">
+          <h4 className="font-medium">스터디 그룹명을 입력해주세요</h4>
+          <form onSubmit={onSubmit} className="w-full flex gap-2 px-1">
             <input
               className="bg-transparent border-b-[1px] border-solid border-b-slate-400"
               name="groupName"
               type="text"
               required
+              onChange={() => {
+                setSessionDate("");
+              }}
             />
-          </label>
+            <button type="submit" className="hover:[&_p]:font-medium">
+              <p>검색</p>
+            </button>
+          </form>
         </div>
-        <div className="flex items-center justify-end">
-          <button type="submit" className="hover:[&_p]:font-medium">
-            <p>검색</p>
-          </button>
+        <div
+          className={`w-full flex flex-col gap-2 px-2 ${
+            isTopicsObjEmpty
+              ? "invisible max-h-0 overflow-hidden transla translate-y-2 opacity-50"
+              : "visible translate-y-0 opacity-100 transition-all duration-200"
+          } `}
+        >
+          <h4 className="font-medium">수업일을 선택해주세요</h4>
+          <div className="w-full flex gap-2 flex-wrap">
+            {!_.isEmpty(dateKeyData) &&
+              Object.entries(dateKeyData).map(([date, keys]) => (
+                <button
+                  key={date}
+                  className="px-2 bg-blue-100 hover:bg-gradient-to-r hover:from-indigo-200 hover:to-blue-200"
+                  onClick={() => {
+                    setSessionDate(date);
+                    setKeyArr(keys);
+                    // getHomeworkDataFromKey();
+                  }}
+                >
+                  {date}
+                </button>
+              ))}
+          </div>
         </div>
-      </form>
+      </div>
+
       <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto">
-        {homeworkData.map(({ uid, category, type, subtype, content }, idx) => (
-          <div key={uid} className="w-full p-3 bg-white dark:bg-slate-700 mini-scroll scroll flex flex-col gap-y-1">
+        {isHomeworkFetching && <p>Loading...</p>}
+        {homeworkData?.map(({ uid, category, type, subtype, content }, idx) => (
+          <div
+            key={uid}
+            className="w-full rounded-md p-3 bg-white dark:bg-slate-700 mini-scroll scroll flex flex-col gap-y-1"
+          >
             <p className="font-medium">
               {idx + 1}. <span>{category}</span>
             </p>
