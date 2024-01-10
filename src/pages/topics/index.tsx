@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { collection, getDocs, query, where, documentId } from "firebase/firestore";
 import { db } from "../../firebase";
-import dayjs from "dayjs";
 
 interface Topic {
   uid: string;
