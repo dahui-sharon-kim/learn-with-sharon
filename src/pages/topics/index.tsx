@@ -14,7 +14,7 @@ interface Topic {
 
 export default function Topics() {
   const [groupName, setGroupName] = useState("");
-  const [keyArr, setKeyArr] = useState([]);
+  const [keyArr, setKeyArr] = useState<string[]>([]);
   const [sessionDate, setSessionDate] = useState("");
   const homeworkRef = collection(db, "homework");
   const homeworkCollection = query(homeworkRef);
@@ -33,9 +33,13 @@ export default function Topics() {
     staleTime: 1000 * 60 * 10, // 10분
   });
 
-  const { data: dateKeyData } = useQuery({
+  interface HomeworkData {
+    [key: string]: string[];
+  }
+
+  const { data: dateKeyData } = useQuery<HomeworkData | undefined>({
     queryKey: ["group", groupName],
-    queryFn: async (): Promise<object> => {
+    queryFn: async (): Promise<HomeworkData> => {
       if (groupName === "") {
         return {};
       }
@@ -97,7 +101,6 @@ export default function Topics() {
                   onClick={() => {
                     setSessionDate(date);
                     setKeyArr(keys);
-                    // getHomeworkDataFromKey();
                   }}
                 >
                   {date}
