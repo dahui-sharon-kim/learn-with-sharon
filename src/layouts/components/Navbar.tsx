@@ -22,7 +22,7 @@ export default function Navbar() {
   });
 
   return (
-    <nav className="w-full flex items-center justify-between h-14 sticky px-7 py-0 top-0 bg-slate-50 dark:bg-slate-800 dark:shadow-slate-500 bg-opacity-50 shadow">
+    <nav className="w-full flex items-center justify-between h-14 sticky px-7 py-0 top-0 bg-opacity-50 bg-white dark:bg-slate-800 dark:shadow-slate-500 shadow">
       <button onClick={() => navigate("/main")}>
         <h1 className="font-semibold">Study with Sharon</h1>
       </button>

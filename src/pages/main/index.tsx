@@ -39,7 +39,7 @@ export default function Main() {
           className="w-full h-8 bg-white dark:bg-slate-600 border-solid border-[1px] border-slate-800 dark:border-slate-300"
           onClick={() => navigate("/homework")}
         >
-          <p>위클리 숙제 보기</p>
+          <p>My Homework</p>
         </button>
       </div>
     </div>
