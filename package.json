@@ -11,7 +11,9 @@
   },
   "dependencies": {
     "@tanstack/react-query": "^5.17.0",
+    "@tinymce/tinymce-react": "^4.3.2",
     "dayjs": "^1.11.10",
+    "draft-js": "^0.11.7",
     "eslint-plugin-react": "^7.33.2",
     "firebase": "^10.7.1",
     "lodash": "^4.17.21",
