@@ -1077,6 +1077,14 @@
   dependencies:
     "@tanstack/query-core" "5.17.9"
 
+"@tinymce/tinymce-react@^4.3.2":
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/@tinymce/tinymce-react/-/tinymce-react-4.3.2.tgz#fbe05e35e948b0e577eddf639bfe7ee2158fdc10"
+  integrity sha512-wJHZhPf2Mk3yTtdVC/uIGh+kvDgKuTw/qV13uzdChTNo68JI1l7jYMrSQOpyimDyn5LHAw0E1zFByrm1WHAVeA==
+  dependencies:
+    prop-types "^15.6.2"
+    tinymce "^6.0.0 || ^5.5.1"
+
 "@types/babel__core@^7.20.5":
   version "7.20.5"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.20.5.tgz#3df15f27ba85319caa07ba08d0721889bb39c017"
@@ -3092,7 +3100,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-prop-types@^15.7.2, prop-types@^15.8.1:
+prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -3557,6 +3565,11 @@ thenify-all@^1.0.0:
   integrity sha512-RVZSIV5IG10Hk3enotrhvz0T9em6cyHBLkH/YAZuKqd8hRkKhSfCGIcP2KUY0EPxndzANBmNllzWPwak+bheSw==
   dependencies:
     any-promise "^1.0.0"
+
+"tinymce@^6.0.0 || ^5.5.1":
+  version "6.8.2"
+  resolved "https://registry.yarnpkg.com/tinymce/-/tinymce-6.8.2.tgz#567b1a0d922555b535de4c74b7c74af6964016ea"
+  integrity sha512-Lho79o2Y1Yn+XdlTEkHTEkEmzwYWTXz7IUsvPwxJF3VTtgHUIAAuBab29kik+f2KED3rZvQavr9D7sHVMJ9x4A==
 
 to-fast-properties@^2.0.0:
   version "2.0.0"

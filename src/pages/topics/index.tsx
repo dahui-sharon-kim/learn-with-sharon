@@ -14,6 +14,7 @@ interface Topic {
 
 export default function Topics() {
   const [groupName, setGroupName] = useState("");
+  const [studentName, setStudentName] = useState("");
   const [keyArr, setKeyArr] = useState<string[]>([]);
   const [sessionDate, setSessionDate] = useState("");
   const homeworkRef = collection(db, "homework");
@@ -55,6 +56,24 @@ export default function Topics() {
     staleTime: 1000 * 60, // 1분
   });
 
+  console.log({ groupName });
+
+  const { data } = useQuery({
+    queryKey: ["student", studentName],
+    queryFn: async () => {
+      if (groupName === "") {
+        return [];
+      }
+      const groupRef = collection(db, "groups");
+      const studentsQuery = query(groupRef);
+      const studentsQuerySnapshot = await getDocs(studentsQuery);
+      return studentsQuerySnapshot.docs.map((doc) => doc.data());
+    },
+    staleTime: 1000 * 60, // 1분
+  });
+
+  console.log({ data });
+
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -75,9 +94,7 @@ export default function Topics() {
               name="groupName"
               type="text"
               required
-              onChange={() => {
-                setSessionDate("");
-              }}
+              onChange={() => setSessionDate("")}
             />
             <button type="submit" className="hover:[&_p]:font-medium">
               <p>검색</p>
@@ -107,6 +124,10 @@ export default function Topics() {
                 </button>
               ))}
           </div>
+        </div>
+        <div className={`w-full flex flex-col gap-2 px-2`}>
+          <h4 className="font-medium">숙제 제출 및 열람을 하려면 내 이름을 선택해주세요</h4>
+          <div className="w-full flex gap-2 flex-wrap"></div>
         </div>
       </div>
 
