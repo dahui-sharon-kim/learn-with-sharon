@@ -15,36 +15,33 @@ interface Topic {
 export default function Topics() {
   const [groupName, setGroupName] = useState("");
   const [studentName, setStudentName] = useState("");
-  const [keyArr, setKeyArr] = useState<string[]>([]);
+  const [uidsArr, setUidsArr] = useState<string[]>([]);
   const [sessionDate, setSessionDate] = useState("");
+  const groupsRef = collection(db, "groups");
   const homeworkRef = collection(db, "homework");
-  const homeworkCollection = query(homeworkRef);
+  const topicsRef = collection(db, "topics");
 
   const { data: homeworkData, isFetching: isHomeworkFetching } = useQuery({
     queryKey: ["homework", sessionDate],
     queryFn: async (): Promise<Topic[]> => {
-      if (_.isEmpty(keyArr)) {
+      if (_.isEmpty(uidsArr)) {
         return [];
       }
-      const topicsRef = collection(db, "topics");
-      const topicsQuery = query(topicsRef, where(documentId(), "in", keyArr));
-      const topicsQuerySnapshot = await getDocs(topicsQuery);
-      return topicsQuerySnapshot.docs.map((doc) => doc.data()) as Topic[];
+      const topicsQuery = query(topicsRef, where(documentId(), "in", uidsArr));
+      const topicsSnapshot = await getDocs(topicsQuery);
+      return topicsSnapshot.docs.map((doc) => doc.data()) as Topic[];
     },
     staleTime: 1000 * 60 * 10, // 10분
   });
 
-  interface HomeworkData {
-    [key: string]: string[];
-  }
-
-  const { data: dateKeyData } = useQuery<HomeworkData | undefined>({
+  const { data: dateToUidsArrMap } = useQuery<Record<string, string[]> | undefined>({
     queryKey: ["group", groupName],
-    queryFn: async (): Promise<HomeworkData> => {
+    queryFn: async (): Promise<Record<string, string[]>> => {
       if (groupName === "") {
         return {};
       }
-      const querySnapshot = await getDocs(homeworkCollection);
+      const homeworkQuery = query(homeworkRef);
+      const querySnapshot = await getDocs(homeworkQuery);
       let homework = {};
       querySnapshot.forEach((doc) => {
         if (doc.id === groupName) {
@@ -56,23 +53,24 @@ export default function Topics() {
     staleTime: 1000 * 60, // 1분
   });
 
-  console.log({ groupName });
-
-  const { data } = useQuery({
-    queryKey: ["student", studentName],
-    queryFn: async () => {
+  const { data: studentNames } = useQuery<string[] | undefined>({
+    queryKey: ["studentNames", groupName],
+    queryFn: async (): Promise<string[]> => {
       if (groupName === "") {
         return [];
       }
-      const groupRef = collection(db, "groups");
-      const studentsQuery = query(groupRef);
-      const studentsQuerySnapshot = await getDocs(studentsQuery);
-      return studentsQuerySnapshot.docs.map((doc) => doc.data());
+      const namesQuery = query(groupsRef);
+      const querySnapshot = await getDocs(namesQuery);
+      let students: string[] = [];
+      querySnapshot.forEach((doc) => {
+        if (doc.id === groupName) {
+          students = doc.data().members;
+        }
+      });
+      return students;
     },
-    staleTime: 1000 * 60, // 1분
+    staleTime: 1000 * 60 * 10, // 10분
   });
-
-  console.log({ data });
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -80,7 +78,6 @@ export default function Topics() {
     const formObject = Object.fromEntries(formData.entries());
     setGroupName(formObject.groupName as string);
   };
-  const isTopicsObjEmpty = _.isEmpty(dateKeyData);
   return (
     <div className="w-full h-full max-w-5xl p-4 md:p-8 flex flex-col items-center justify-start gap-4">
       <div className="w-full flex flex-col gap-3 rounded-md bg-white dark:bg-slate-700 p-3">
@@ -103,21 +100,45 @@ export default function Topics() {
         </div>
         <div
           className={`w-full flex flex-col gap-2 px-2 ${
-            isTopicsObjEmpty
-              ? "invisible max-h-0 overflow-hidden transla translate-y-2 opacity-50"
+            _.isEmpty(studentNames)
+              ? "invisible max-h-0 overflow-hidden translate-y-2 opacity-50"
               : "visible translate-y-0 opacity-100 transition-all duration-200"
-          } `}
+          }`}
+        >
+          <h4 className="font-medium">숙제 제출 및 열람을 하려면 내 이름을 선택해주세요</h4>
+          <div className="w-full flex gap-2 flex-wrap">
+            {studentNames?.map((name) => (
+              <button
+                key={`${groupName}-${name}`}
+                className={`rounded-sm px-2 bg-blue-100 ${
+                  name === studentName ? "bg-gradient-to-r from-indigo-300 to-blue-300 " : ""
+                }hover:bg-gradient-to-r hover:from-indigo-300 hover:to-blue-300`}
+                onClick={() => setStudentName(name)}
+              >
+                {name}
+              </button>
+            ))}
+          </div>
+        </div>
+        <div
+          className={`w-full flex flex-col gap-2 px-2 ${
+            _.isEmpty(dateToUidsArrMap)
+              ? "invisible max-h-0 overflow-hidden translate-y-2 opacity-50"
+              : "visible translate-y-0 opacity-100 transition-all duration-200"
+          }`}
         >
           <h4 className="font-medium">수업일을 선택해주세요</h4>
           <div className="w-full flex gap-2 flex-wrap">
-            {!_.isEmpty(dateKeyData) &&
-              Object.entries(dateKeyData).map(([date, keys]) => (
+            {!_.isEmpty(dateToUidsArrMap) &&
+              Object.entries(dateToUidsArrMap).map(([date, keys]) => (
                 <button
                   key={date}
-                  className="px-2 bg-blue-100 hover:bg-gradient-to-r hover:from-indigo-200 hover:to-blue-200"
+                  className={`rounded-sm px-2 bg-blue-100 ${
+                    date === sessionDate ? "bg-gradient-to-r from-indigo-300 to-blue-300" : ""
+                  } hover:bg-gradient-to-r hover:from-indigo-300 hover:to-blue-300`}
                   onClick={() => {
                     setSessionDate(date);
-                    setKeyArr(keys);
+                    setUidsArr(keys);
                   }}
                 >
                   {date}
@@ -125,19 +146,15 @@ export default function Topics() {
               ))}
           </div>
         </div>
-        <div className={`w-full flex flex-col gap-2 px-2`}>
-          <h4 className="font-medium">숙제 제출 및 열람을 하려면 내 이름을 선택해주세요</h4>
-          <div className="w-full flex gap-2 flex-wrap"></div>
-        </div>
       </div>
-
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto">
+      <div className="w-full grid grid-cols-1 gap-4">
         {isHomeworkFetching && <p>Loading...</p>}
         {homeworkData?.map(({ uid, category, type, subtype, content }, idx) => (
           <div
             key={uid}
             className="w-full rounded-md p-3 bg-white dark:bg-slate-700 mini-scroll scroll flex flex-col gap-y-1"
           >
+            <p className="font-medium">{uid}</p>
             <p className="font-medium">
               {idx + 1}. <span>{category}</span>
             </p>
